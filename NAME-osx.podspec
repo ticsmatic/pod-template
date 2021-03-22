@@ -1,7 +1,7 @@
 Pod::Spec.new do |s|
   s.name             = '${POD_NAME}'
   s.version          = '0.1.0'
-  s.summary          = 'A short description of ${POD_NAME}.'
+  s.summary          = '简介'
   s.description      = '添加描述'
   s.homepage         = 'http://gitlab2.bitautotech.com/WP/Mobile/IOS/${POD_NAME}'
   s.license          = { :type => 'MIT', :file => 'LICENSE' }
