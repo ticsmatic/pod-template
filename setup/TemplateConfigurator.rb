@@ -76,7 +76,7 @@ module Pod
         when :macos
           ConfigureMacOSSwift.perform(configurator: self)
         when :ios
-          framework = self.ask_with_answers("What language do you want to use?", ["Swift", "ObjC"]).to_sym
+          framework = self.ask_with_answers("What language do you want to use?", ["ObjC", "Swift"]).to_sym
           case framework
             when :swift
               ConfigureSwift.perform(configurator: self)
@@ -194,7 +194,19 @@ module Pod
     #----------------------------------------#
 
     def user_name
-      (ENV['GIT_COMMITTER_NAME'] || github_user_name || `git config user.name` || `<GITHUB_USERNAME>` ).strip
+      (ENV['GIT_COMMITTER_NAME'] || gitlab_user_name || github_user_name || `git config user.name` || `<GITHUB_USERNAME>` ).strip
+    end
+
+    def gitlab_user_name
+      gitlab_user_name = `security find-internet-password -s gitlab2.bitautotech.com | grep acct | sed 's/"acct"<blob>="//g' | sed 's/"//g'`.strip
+      is_valid = gitlab_user_name.empty? or gitlab_user_name.include? '@'
+      return is_valid ? nil : gitlab_user_name
+    end
+
+    def gitlab_user_email
+      gitlab_user_email = "#{gitlab_user_name}@yiche.com"
+      is_valid = gitlab_user_email.empty?
+      return is_valid ? nil : gitlab_user_email 
     end
 
     def github_user_name
@@ -204,7 +216,7 @@ module Pod
     end
 
     def user_email
-      (ENV['GIT_COMMITTER_EMAIL'] || `git config user.email`).strip
+      (ENV['GIT_COMMITTER_EMAIL'] || gitlab_user_email || `git config user.email`).strip
     end
 
     def year
